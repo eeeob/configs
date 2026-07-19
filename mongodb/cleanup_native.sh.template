@@ -1,0 +1,22 @@
+#!/bin/bash
+# سكربت التصفية الشاملة لتثبيت MongoDB المباشر - يُولَّد تلقائياً من install_mongodb.sh
+# يعمل بصلاحيات root عبر CLEANUP_COMMAND المسجل في ملف الكونفج
+
+echo "Stopping and disabling mongod service..."
+systemctl stop mongod 2>/dev/null || true
+systemctl disable mongod 2>/dev/null || true
+rm -rf /etc/systemd/system/mongod.service.d
+systemctl daemon-reload
+
+echo "Purging MongoDB packages..."
+apt-get purge -y mongodb-org* 2>/dev/null || true
+apt-get autoremove -y 2>/dev/null || true
+
+echo "Removing apt source and keyring..."
+rm -f "${APT_SOURCE_FILE}"
+rm -f "${KEYRING_FILE}"
+
+echo "Removing MongoDB data and logs..."
+rm -rf /var/lib/mongodb /var/log/mongodb
+
+echo "MongoDB native installation cleanup completed."

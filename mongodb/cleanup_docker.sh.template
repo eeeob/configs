@@ -1,0 +1,10 @@
+#!/bin/bash
+# سكربت التصفية الشاملة لتثبيت MongoDB على Docker - يُولَّد تلقائياً من install_mongodb.sh
+# يعمل بصلاحيات root عبر CLEANUP_COMMAND المسجل في ملف الكونفج
+
+echo "Removing MongoDB compose services, images"
+docker compose -f "${COMPOSE_FILE}" down --rmi all -v 2>/dev/null || true
+docker rm -f "${CONTAINER_NAME}" 2>/dev/null || true
+
+
+echo "MongoDB docker installation cleanup completed."

@@ -1,0 +1,99 @@
+# ==========================================================
+# اعدادات nginx الأساسية - تعمل خلف Cloudflare (Full strict)
+# تستخدم Cloudflare Origin Certificate (وليس Let's Encrypt)
+#
+# الـ locations الخاصة بالخدمات والمواقع توضع في ملفات منفصلة داخل:
+#   /etc/nginx/locations/*.conf
+# ==========================================================
+
+log_format custom_log '[$time_local] - '
+                      '$remote_addr - '
+                      '[$scheme] - '
+                      '"$request" - '
+                      'status=($status) - '
+                      'bytes=($body_bytes_sent) - '
+                      'referer="$http_referer" - '
+                      'ua="$http_user_agent"';
+
+autoindex off;
+server_tokens off;
+
+server {
+    listen 80;
+    server_name ${SERVER_NAME} www.${SERVER_NAME};
+
+    access_log /var/log/nginx/access.log custom_log;
+
+    if ($request_method !~ ^(GET|POST)$) {
+        return 405;
+    }
+
+    if ($is_cloudflare = 0) {
+        return 444;
+    }
+
+    # حظر الملفات المخفية التي تبدأ بنقطة
+    location ~ /\. {
+        return 444;
+    }
+
+    # حظر امتدادات الملفات الحساسة (بدون التأثير على باراميترات الرابط بعد ?)
+    location ~* \.(php|html|txt|bak|config|sql|log|ini|conf|sh|py|json|yaml|yml|exe|dll|md|xml)$ {
+        return 444;
+    }
+
+    # تحويل أي طلب HTTP إلى HTTPS
+    # (Cloudflare أصلاً يتصل بالسيرفر عبر 443 بوضع Full strict،
+    #  هذا البلوك للحالات التي يصل فيها طلب HTTP مباشرة)
+    location / {
+        return 301 https://$host$request_uri;
+    }
+}
+
+server {
+    listen 443 ssl;
+    server_name ${SERVER_NAME} www.${SERVER_NAME};
+
+    access_log /var/log/nginx/access.log custom_log;
+
+    # شهادة Cloudflare Origin (تنشأ من Cloudflare Dashboard > SSL/TLS > Origin Server)
+    ssl_certificate     /etc/nginx/certs/cloudflare-origin.pem;
+    ssl_certificate_key /etc/nginx/certs/cloudflare-origin.key;
+
+    if ($request_method !~ ^(GET|POST)$) {
+        return 405;
+    }
+
+    if ($is_cloudflare = 0) {
+        return 444;
+    }
+
+    location ~ /\. {
+        return 444;
+    }
+
+    # حظر امتدادات الملفات الحساسة (بدون التأثير على باراميترات الرابط بعد ?)
+    location ~* \.(php|html|txt|bak|config|sql|log|ini|conf|sh|py|json|yaml|yml|exe|dll|md|xml)$ {
+        return 444;
+    }
+
+    ssl_protocols TLSv1.2 TLSv1.3;
+    ssl_ciphers HIGH:!aNULL:!MD5:!3DES;
+    ssl_prefer_server_ciphers on;
+
+    client_max_body_size 20M;
+
+    add_header X-Content-Type-Options nosniff always;
+    add_header X-Frame-Options DENY always;
+    add_header X-XSS-Protection "1; mode=block" always;
+    add_header Referrer-Policy no-referrer-when-downgrade always;
+
+    # الـ locations الخاصة بكل خدمة في ملفات منفصلة يتم تحميلها تلقائياً
+    include /etc/nginx/locations/*.conf;
+
+    # أي مسار غير معرف في ملفات locations يرجع 404
+    # (إذا أردت تعريف location / خاص بك في ملف منفصل احذف هذا البلوك)
+    location / {
+        return 404;
+    }
+}

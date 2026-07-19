@@ -1,0 +1,14 @@
+services:
+  mongodb:
+    image: mongo:${MONGO_VERSION}
+    container_name: mongodb
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:27017:27017"
+    networks:
+      - main_network
+
+
+networks:
+  main_network:
+    external: true

@@ -1,0 +1,13 @@
+CONFIGURED_AT="${CONFIGURED_AT}"
+SERVICE="nginx"
+INSTALL_METHOD="${INSTALL_METHOD}"
+NGINX_VERSION="${NGINX_VERSION}"
+SERVER_NAME="${SERVER_NAME}"
+PORTS="80,443"
+NGINX_CONFIG="/etc/nginx/conf.d/default.conf"
+LOCATIONS_DIR="/etc/nginx/locations"
+CERTS_DIR="/etc/nginx/certs"
+RESTART_COMMAND="${RESTART_COMMAND}"
+
+# أمر التصفية الشاملة الذي تنفذه _handle_existing_config_file عند إعادة الضبط من الصفر
+CLEANUP_COMMAND="${CLEANUP_COMMAND}"

@@ -1,0 +1,13 @@
+#!/bin/bash
+# سكربت التصفية الشاملة لتثبيت Nginx على Docker - يُولَّد تلقائياً من install_nginx.sh
+# يعمل بصلاحيات root عبر CLEANUP_COMMAND المسجل في ملف الكونفج
+
+echo "Removing Nginx compose services and images..."
+docker compose -f "${COMPOSE_FILE}" down --rmi all 2>/dev/null || true
+docker rm -f "${CONTAINER_NAME}" 2>/dev/null || true
+
+echo "Removing deployed Nginx configuration, locations and certs..."
+rm -f /etc/nginx/conf.d/default.conf /etc/nginx/conf.d/cloudflare.conf
+rm -rf "${LOCATIONS_DIR}" "${CERTS_DIR}"
+
+echo "Nginx docker installation cleanup completed."

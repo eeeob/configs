@@ -1,0 +1,22 @@
+#!/bin/bash
+# سكربت التصفية الشاملة لتثبيت Nginx المباشر - يُولَّد تلقائياً من install_nginx.sh
+# يعمل بصلاحيات root عبر CLEANUP_COMMAND المسجل في ملف الكونفج
+
+echo "Stopping and disabling nginx service..."
+systemctl stop nginx 2>/dev/null || true
+systemctl disable nginx 2>/dev/null || true
+systemctl daemon-reload
+
+echo "Purging Nginx packages..."
+apt-get purge -y nginx 2>/dev/null || true
+apt-get autoremove -y 2>/dev/null || true
+
+echo "Removing apt source and keyring..."
+rm -f /etc/apt/sources.list.d/nginx.list
+rm -f /usr/share/keyrings/nginx-archive-keyring.gpg
+
+echo "Removing deployed Nginx configuration, locations and certs..."
+rm -f /etc/nginx/conf.d/default.conf /etc/nginx/conf.d/cloudflare.conf
+rm -rf "${LOCATIONS_DIR}" "${CERTS_DIR}"
+
+echo "Nginx native installation cleanup completed."
