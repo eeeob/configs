@@ -1,7 +1,11 @@
 CONFIGURED_AT="${CONFIGURED_AT}"
-UFW_ENABLED="yes"
+SERVICE="ufw"
 SSH_ALLOWED_VIA="OpenSSH"
 SSH_PORT="${SSH_PORT}"
 DEFAULT_INCOMING="deny"
 DEFAULT_OUTGOING="allow"
 OLD_RULES_RESET="${OLD_RULES_RESET}"
+
+# أمر التصفية الشاملة الذي تنفذه _handle_existing_config_file عند إعادة الضبط من الصفر
+# ufw reset يعطل الجدار الناري ويحذف كل القواعد
+CLEANUP_COMMAND="${CLEANUP_COMMAND}"
