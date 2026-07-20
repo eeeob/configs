@@ -11,3 +11,7 @@ RESTART_COMMAND="${RESTART_COMMAND}"
 
 # أمر التصفية الشاملة الذي تنفذه _handle_existing_config_file عند إعادة الضبط من الصفر
 CLEANUP_COMMAND="${CLEANUP_COMMAND}"
+
+#Optional
+DOCKER_CONTAINER_NAME="${DOCKER_CONTAINER_NAME}"
+DOCKER_NETWORK_NAME="${DOCKER_NETWORK_NAME}"
