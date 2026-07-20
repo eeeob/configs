@@ -1,7 +1,7 @@
 services:
   nginx:
     image: nginx:stable
-    container_name: nginx
+    container_name: ${CONTAINER_NAME}
     restart: unless-stopped
     ports:
       - "80:80"
@@ -12,3 +12,10 @@ services:
       - /etc/nginx/locations:/etc/nginx/locations:ro
       - /etc/nginx/certs:/etc/nginx/certs:ro
       - /var/log/nginx:/var/log/nginx
+    networks:
+      - ${NETWORK_NAME}
+
+networks:
+  # شبكة ثابتة خارجية - أي حاوية أخرى تنضم لها يستطيع nginx عمل proxy لها بالاسم
+  ${NETWORK_NAME}:
+    external: true
