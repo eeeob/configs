@@ -1,14 +1,14 @@
 services:
   mongodb:
     image: mongo:${MONGO_VERSION}
-    container_name: mongodb
+    container_name: ${CONTAINER_NAME}
     restart: unless-stopped
+    command: ["mongod", "--port", "${PORT}", "--bind_ip_all"]
     ports:
-      - "127.0.0.1:27017:27017"
+      - "${BIND_IP}:${PORT}:${PORT}"
     networks:
-      - main_network
-
+      - ${NETWORK_NAME}
 
 networks:
-  main_network:
+  ${NETWORK_NAME}:
     external: true
