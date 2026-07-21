@@ -1,21 +1,23 @@
 services:
   nginx:
-    image: nginx:stable
+    image: nginx:stable-alpine
     container_name: ${CONTAINER_NAME}
     restart: unless-stopped
     ports:
       - "80:80"
       - "443:443"
     volumes:
-      # نفس ملفات الاعدادات المستخدمة في التثبيت المباشر تُركّب داخل الحاوية
-      - /etc/nginx/conf.d:/etc/nginx/conf.d:ro
-      - /etc/nginx/locations:/etc/nginx/locations:ro
-      - /etc/nginx/certs:/etc/nginx/certs:ro
-      - /var/log/nginx:/var/log/nginx
+      - ${NGINX_CONFIG_DIR}:/etc/nginx/conf.d:ro
+      - ${LOCATIONS_DIR}:${LOCATIONS_DIR}:ro
+      - ${CERTS_DIR}:${CERTS_DIR}:ro
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "2"
     networks:
       - ${NETWORK_NAME}
 
 networks:
-  # شبكة ثابتة خارجية - أي حاوية أخرى تنضم لها يستطيع nginx عمل proxy لها بالاسم
   ${NETWORK_NAME}:
     external: true

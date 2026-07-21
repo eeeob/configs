@@ -6,6 +6,11 @@ services:
     command: ["mongod", "--port", "${PORT}", "--bind_ip_all"]
     ports:
       - "${BIND_IP}:${PORT}:${PORT}"
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "2"
     networks:
       - ${NETWORK_NAME}
 

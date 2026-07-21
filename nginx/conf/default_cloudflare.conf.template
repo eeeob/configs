@@ -28,6 +28,10 @@ server {
         return 405;
     }
 
+    if ($is_cloudflare = 0) {
+        return 444;
+    }
+
     location ~ /\. {
         return 444;
     }
@@ -52,6 +56,10 @@ server {
 
     if ($request_method !~ ^(GET|POST)$) {
         return 405;
+    }
+
+    if ($is_cloudflare = 0) {
+        return 444;
     }
 
     location ~ /\. {

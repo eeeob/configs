@@ -1,0 +1,15 @@
+# ==========================================================
+# Cloudflare origin protection
+# البنية ثابتة، ونطاقات Cloudflare (IPs) فقط تُحدَّث في كل تشغيل من المصدر الرسمي
+# ==========================================================
+
+# Restore the real visitor IP from the Cloudflare header
+${SET_REAL_IP_FROM}
+real_ip_header CF-Connecting-IP;
+real_ip_recursive on;
+
+# $is_cloudflare = 1 only when the direct peer is an official Cloudflare IP
+geo $realip_remote_addr $is_cloudflare {
+    default 0;
+${GEO_ENTRIES}
+}
