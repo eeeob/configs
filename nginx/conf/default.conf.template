@@ -1,6 +1,6 @@
 # ==========================================================
-# اعدادات nginx الأساسية - تعمل خلف Cloudflare (Full strict)
-# تستخدم Cloudflare Origin Certificate (وليس Let's Encrypt)
+# اعدادات nginx الأساسية - بدون الاعتماد على Cloudflare (يُقبل الوصول من كل المصادر)
+# تستخدم شهادة TLS موقّعة ذاتياً (self-signed)
 #
 # الـ locations الخاصة بالخدمات والمواقع توضع في ملفات منفصلة داخل:
 #   ${LOCATIONS_DIR}/*.conf
