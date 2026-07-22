@@ -19,4 +19,6 @@ echo "Removing deployed Nginx configuration, locations and certs..."
 rm -f "/etc/update-motd.d/99-nginx-info"
 rm -rf "${CONFIG_DIR}" "${NGINX_CONFIG_DIR}" "${LOCATIONS_DIR}" "${CERTS_DIR}"
 
+${STOP_UFW}
+
 echo "Nginx native installation cleanup completed."
