@@ -7,6 +7,7 @@ docker compose -f "${COMPOSE_FILE}" down --rmi all 2>/dev/null || true
 docker rm -f "${CONTAINER_NAME}" 2>/dev/null || true
 
 echo "Removing deployed Nginx configuration, locations and certs..."
+rm -f "/etc/update-motd.d/99-nginx-info"
 rm -rf "${CONFIG_DIR}" "${NGINX_CONFIG_DIR}" "${LOCATIONS_DIR}" "${CERTS_DIR}"
 
 echo "Nginx docker installation cleanup completed."

@@ -21,6 +21,7 @@ rm -rf /var/lib/mongodb /var/log/mongodb
 
 ${STOP_UFW}
 
+rm -f "/etc/update-motd.d/99-mongodb-info"
 rm -rf "${CONFIG_DIR}"
 
 echo "MongoDB native installation cleanup completed."

@@ -12,6 +12,7 @@ apt-get purge -y ufw 2>/dev/null || true
 apt-get autoremove -y 2>/dev/null || true
 
 echo "Removing deployed UFW configuration..."
+rm -f "/etc/update-motd.d/99-ufw-info"
 rm -rf "${CONFIG_DIR}"
 
 echo "UFW cleanup completed."
