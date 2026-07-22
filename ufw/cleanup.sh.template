@@ -1,0 +1,17 @@
+#!/bin/bash
+# سكربت التصفية الشاملة لتفعيل UFW - يُولَّد تلقائياً من setup_ufw.sh
+# يعمل بصلاحيات root عبر CLEANUP_COMMAND المسجل في ملف الكونفج
+
+echo "Resetting UFW rules..."
+ufw --force reset 2>/dev/null || true
+
+echo "Stopping, disabling and purging the ufw package..."
+systemctl stop ufw 2>/dev/null || true
+systemctl disable ufw 2>/dev/null || true
+apt-get purge -y ufw 2>/dev/null || true
+apt-get autoremove -y 2>/dev/null || true
+
+echo "Removing deployed UFW configuration..."
+rm -rf "${CONFIG_DIR}"
+
+echo "UFW cleanup completed."

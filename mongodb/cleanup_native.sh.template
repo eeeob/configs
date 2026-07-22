@@ -21,4 +21,6 @@ rm -rf /var/lib/mongodb /var/log/mongodb
 
 ${STOP_UFW}
 
+rm -rf "${CONFIG_DIR}"
+
 echo "MongoDB native installation cleanup completed."
