@@ -19,4 +19,6 @@ rm -f "${KEYRING_FILE}"
 echo "Removing MongoDB data and logs..."
 rm -rf /var/lib/mongodb /var/log/mongodb
 
+${STOP_UFW}
+
 echo "MongoDB native installation cleanup completed."
